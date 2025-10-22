@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    container_name: django_web
+    # 저장소 경로
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    expose:
+      - "8000"
+  nginx:
+  # nginx에서 동작될 이미지 설정
+    image: nginx:alpine
+    container_name: nginx_proxy
+    # 외부서버 요청: 8080:80
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/code/static
+    depends_on:
+      - web
